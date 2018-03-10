@@ -13,18 +13,13 @@ import (
 
 func main() {
 
-	// ciao := themoviedb.SearchMovie{Year: 2018, Query: "Black Panther", Language: "it-IT"}
-	// x, _ := ciao.Search()
-
-	// fmt.Print(x.Results[0].Overview)
-
 	files, err := ioutil.ReadDir(".")
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	for _, file := range files {
-		if !file.IsDir() {
+		if !file.IsDir() && strings.HasSuffix(file.Name(), "testMovie") {
 
 			file := file.Name()
 			ext := path.Ext(file)
@@ -40,9 +35,10 @@ func main() {
 			}
 
 			y, _ := strconv.Atoi(year)
-			tmdb := themoviedb.SearchMovie{Query: movie, Year: y}
+			tmdb := themoviedb.SearchMovie{Query: movie, Year: y, Language: "IT-it"}
 			x, _ := tmdb.Search()
-			fmt.Println(x.Results[0].Overview)
+			fmt.Println(x.Results)
+			fmt.Println("\n----------------------\n\n\n\n")
 		}
 	}
 }
