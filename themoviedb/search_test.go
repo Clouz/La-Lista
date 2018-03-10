@@ -11,5 +11,6 @@ func TestSearch(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error in the Search %d", err)
 	}
+
 	t.Logf("%s", s.Results[0].Title)
 }
