@@ -17,7 +17,7 @@ type SearchMovie struct {
 	Language           string //Pass a ISO 639-1 value to display translated data
 	Query              string //Pass a text query to search
 	Page               string //Specify which page to query
-	IncludeAdult       bool   //Choose whether to inlcude adult content in the results
+	IncludeAdult       bool   //Choose whether to include adult content in the results
 	Region             string //Specify a ISO 3166-1 code to filter release dates
 	Year               int
 	PrimaryReleaseYear int
