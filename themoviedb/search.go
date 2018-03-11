@@ -9,9 +9,8 @@ import (
 	"strconv"
 )
 
-//API info: https://developers.themoviedb.org/3/search/search-movies
-var site = "https://api.themoviedb.org/3/search/movie?"
-var apiKey = "api_key=da6f7ad5c8626cea07130cdf023dab07"
+//APIKey is my TheMovieDB API key
+var APIKey = "api_key=da6f7ad5c8626cea07130cdf023dab07"
 
 // SearchMovie Search for movies.
 type SearchMovie struct {
@@ -52,7 +51,10 @@ type Result struct {
 
 // Compose return the URL for the quey
 func (m SearchMovie) Compose() string {
-	result := site + apiKey
+	//API info: https://developers.themoviedb.org/3/search/search-movies
+	var site = "https://api.themoviedb.org/3/search/movie?"
+
+	result := site + APIKey
 	if m.Language != "" {
 		result = result + "&language=" + m.Language
 	}

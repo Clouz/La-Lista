@@ -5,7 +5,13 @@ import (
 	"La-Lista/themoviedb"
 	"flag"
 	"fmt"
+	"time"
+
+	"github.com/fatih/color"
 )
+
+var red = color.New(color.FgRed).SprintFunc()
+var green = color.New(color.FgGreen).SprintFunc()
 
 func main() {
 
@@ -15,6 +21,7 @@ func main() {
 	m := movieFile.GetFile(*dir)
 
 	for _, mov := range m {
+		time.Sleep(time.Duration(200) * time.Millisecond) //TODO: try to reduce delay
 		s := themoviedb.SearchMovie{
 			Query:    mov.Name,
 			Year:     mov.Year,
@@ -23,10 +30,10 @@ func main() {
 		sch, err := s.Search()
 
 		if err != nil {
-			fmt.Printf("[ FAIL ] %v\n", mov.Name)
+			fmt.Printf("[ %v ] %v\n", red("FAIL"), mov.Name)
 			continue
 		}
 
-		fmt.Printf("[  OK  ] %v\n", sch.Results[0].Title)
+		fmt.Printf("[  %v  ] %v\n", green("OK"), sch.Results[0].Title)
 	}
 }

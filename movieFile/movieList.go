@@ -56,6 +56,18 @@ func GetFile(dir string) []Movie {
 		movies[i].Ext = path.Ext(file.Name())
 		movies[i].Name = strings.TrimSuffix(file.Name(), movies[i].Ext)
 
+		if strings.Contains(movies[i].Name, ".part") {
+			n := strings.Split(movies[i].Name, ".part")
+			switch n[1] {
+			case "1":
+				movies[i].Name = n[0]
+			default:
+				cap-- //TODO: remove other part
+				continue
+			}
+
+		}
+
 		regex, _ := regexp.Compile(` \(([0-9]{4})\)`)
 
 		if regex.MatchString(movies[i].Name) == true {
