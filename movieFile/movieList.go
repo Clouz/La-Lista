@@ -14,6 +14,7 @@ import (
 // validExt represent hello
 var validExt = map[string]bool{
 	".testMovie": true,
+	// TODO: Add all valid file extension
 }
 
 // Movie contain all the info given in the filename
