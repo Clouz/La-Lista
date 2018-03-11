@@ -2,6 +2,7 @@ package themoviedb
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -37,7 +38,7 @@ type Result struct {
 	Adult            bool    `json:"adult"`
 	Overview         string  `json:"overview"`
 	ReleaseDate      string  `json:"release_date"`
-	GenreIds         string  `json:"genre_ids"`
+	GenreIds         []int   `json:"genre_ids"`
 	ID               int     `json:"Id"`
 	OriginalTitle    string  `json:"original_title"`
 	OriginalLanguage string  `json:"original_language"`
@@ -93,5 +94,9 @@ func (m SearchMovie) Search() (Schema, error) {
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(&schema)
+	if schema.TotalResults == 0 {
+		err := errors.New("No corresponding found")
+		return schema, err
+	}
 	return schema, nil
 }

@@ -13,8 +13,15 @@ import (
 
 // validExt represent hello
 var validExt = map[string]bool{
-	".testMovie": true,
-	// TODO: Add all valid file extension
+	".testmovie": true, //used for testing
+	".mkv":       true,
+	".avi":       true,
+	".mp4":       true,
+	".mov":       true,
+	".mpeg":      true,
+	".divx":      true,
+	".wmv":       true,
+	".xvid":      true,
 }
 
 // Movie contain all the info given in the filename
@@ -35,12 +42,15 @@ func GetFile(dir string) []Movie {
 	}
 
 	movies := make([]Movie, len(files))
+	cap := 0
 
 	for i, file := range files {
 
-		if file.IsDir() || !validExt[path.Ext(file.Name())] {
+		if file.IsDir() || !validExt[strings.ToLower(path.Ext(file.Name()))] {
 			continue
 		}
+
+		cap++
 
 		movies[i].File = file
 		movies[i].Ext = path.Ext(file.Name())
@@ -55,6 +65,7 @@ func GetFile(dir string) []Movie {
 
 		fmt.Printf("[%v]\t%v\t[%v][%v]\n", i, movies[i].Name, movies[i].Year, movies[i].Ext)
 	}
-
-	return movies
+	//
+	//fmt.Printf("%v/%v\n", cap, len(movies))
+	return movies[:cap]
 }
