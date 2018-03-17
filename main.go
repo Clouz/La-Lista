@@ -23,7 +23,7 @@ func init() {
 		if c.NArg() > 0 {
 			ScanDir(c.Args().First())
 		} else {
-			ScanDir("movieFile")
+			ScanDir("movieFile/Rogue One: A Star Wars Story (2016).testMovie")
 		}
 		return nil
 	}
@@ -43,21 +43,50 @@ func ScanDir(dir string) {
 
 	m := movieFile.GetFiles(dir)
 
-	for _, mov := range m {
-		time.Sleep(time.Duration(200) * time.Millisecond) //TODO: try to reduce delay
+	if len(m) > 1 {
+		for _, mov := range m {
+			time.Sleep(time.Duration(200) * time.Millisecond) //TODO: try to reduce delay
+			s := themoviedb.SearchMovie{
+				Query:    mov.Name,
+				Year:     mov.Year,
+				Language: "IT-it",
+			}
+			sch, err := s.Search()
+
+			if err != nil {
+				fmt.Printf("[ %v ] %v\n", red("FAIL"), mov.Name)
+				continue
+			}
+
+			fmt.Printf("[  %v  ] %v\n", green("OK"), sch.Results[0].Title)
+		}
+	} else {
 		s := themoviedb.SearchMovie{
-			Query:    mov.Name,
-			Year:     mov.Year,
+			Query:    m[0].Name,
+			Year:     m[0].Year,
 			Language: "IT-it",
 		}
 		sch, err := s.Search()
 
 		if err != nil {
-			fmt.Printf("[ %v ] %v\n", red("FAIL"), mov.Name)
-			continue
+			fmt.Printf("[ %v ] %v\n", red("FAIL"), m[0].Name)
 		}
 
-		fmt.Printf("[  %v  ] %v\n", green("OK"), sch.Results[0].Title)
-	}
+		fmt.Println("Select correct film:")
+		for i, r := range sch.Results {
+			if i > 10 {
+				break
+			}
+			fmt.Printf("[%v]\t%v (%v)\n", i, r.Title, r.ReleaseDate)
+		}
 
+		fmt.Print("\n> ")
+		var i int
+		_, err = fmt.Scanf("%d", &i)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("%v (%v)%v", sch.Results[i].Title, sch.Results[0].ReleaseDate, m[0].Ext)
+	}
 }
