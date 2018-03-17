@@ -15,6 +15,8 @@ import (
 var red = color.New(color.FgRed).SprintFunc()
 var green = color.New(color.FgGreen).SprintFunc()
 
+var delay int = 200
+
 func init() {
 	app := cli.NewApp()
 	app.Name = "La Lista"
@@ -45,7 +47,7 @@ func ScanDir(dir string) {
 
 	if len(m) > 1 {
 		for _, mov := range m {
-			time.Sleep(time.Duration(200) * time.Millisecond) //TODO: try to reduce delay
+			time.Sleep(time.Duration(delay) * time.Millisecond) //TODO: try to reduce delay
 			s := themoviedb.SearchMovie{
 				Query:    mov.Name,
 				Year:     mov.Year,
@@ -87,6 +89,7 @@ func ScanDir(dir string) {
 			log.Fatal(err)
 		}
 
-		fmt.Printf("%v (%v)%v", sch.Results[i].Title, sch.Results[0].ReleaseDate, m[0].Ext)
+		fn := sch.Results[i].Title + "(" + sch.Results[0].ReleaseDate + ")" + m[0].Ext
+		fmt.Println(fn)
 	}
 }
