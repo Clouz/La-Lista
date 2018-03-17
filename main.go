@@ -3,7 +3,6 @@ package main
 import (
 	"La-Lista/movieFile"
 	"La-Lista/themoviedb"
-	"flag"
 	"fmt"
 	"time"
 
@@ -15,10 +14,17 @@ var green = color.New(color.FgGreen).SprintFunc()
 
 func main() {
 
-	dir := flag.String("scan", "./movieFile/", "Scan directory to search movie file")
-	flag.Parse()
+	arg()
 
-	m := movieFile.GetFile(*dir)
+	// dir := flag.String("scan", "./movieFile/", "Scan directory to search movie file")
+	// flag.Parse()
+
+}
+
+//ScanDir search in the selected directory using TMDB
+func ScanDir(dir string) {
+
+	m := movieFile.GetFile(dir)
 
 	for _, mov := range m {
 		time.Sleep(time.Duration(200) * time.Millisecond) //TODO: try to reduce delay
@@ -36,4 +42,5 @@ func main() {
 
 		fmt.Printf("[  %v  ] %v\n", green("OK"), sch.Results[0].Title)
 	}
+
 }
