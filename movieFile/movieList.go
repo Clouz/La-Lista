@@ -44,40 +44,37 @@ func GetFile(dir string) []Movie {
 	movies := make([]Movie, len(files))
 	cap := 0
 
-	for i, file := range files {
+	for _, file := range files {
 
 		if file.IsDir() || !validExt[strings.ToLower(path.Ext(file.Name()))] {
 			continue
 		}
 
-		cap++
+		movies[cap].File = file
+		movies[cap].Ext = path.Ext(file.Name())
+		movies[cap].Name = strings.TrimSuffix(file.Name(), movies[cap].Ext)
 
-		movies[i].File = file
-		movies[i].Ext = path.Ext(file.Name())
-		movies[i].Name = strings.TrimSuffix(file.Name(), movies[i].Ext)
-
-		if strings.Contains(movies[i].Name, ".part") {
-			n := strings.Split(movies[i].Name, ".part")
+		if strings.Contains(movies[cap].Name, ".part") {
+			n := strings.Split(movies[cap].Name, ".part")
 			switch n[1] {
 			case "1":
-				movies[i].Name = n[0]
+				movies[cap].Name = n[0]
 			default:
-				cap-- //TODO: remove other part
 				continue
 			}
-
 		}
 
 		regex, _ := regexp.Compile(` \(([0-9]{4})\)`)
 
-		if regex.MatchString(movies[i].Name) == true {
-			movies[i].Year, _ = strconv.Atoi(regex.FindStringSubmatch(movies[i].Name)[1])
-			movies[i].Name = strings.Replace(movies[i].Name, regex.FindString(movies[i].Name), "", -1)
+		if regex.MatchString(movies[cap].Name) == true {
+			movies[cap].Year, _ = strconv.Atoi(regex.FindStringSubmatch(movies[cap].Name)[1])
+			movies[cap].Name = strings.Replace(movies[cap].Name, regex.FindString(movies[cap].Name), "", -1)
 		}
 
-		fmt.Printf("[%v]\t%v\t[%v][%v]\n", i, movies[i].Name, movies[i].Year, movies[i].Ext)
+		fmt.Printf("[%v]\t%v\t[%v][%v]\n", cap, movies[cap].Name, movies[cap].Year, movies[cap].Ext)
+
+		cap++
 	}
-	//
-	//fmt.Printf("%v/%v\n", cap, len(movies))
+
 	return movies[:cap]
 }

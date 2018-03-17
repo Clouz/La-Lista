@@ -4,20 +4,36 @@ import (
 	"La-Lista/movieFile"
 	"La-Lista/themoviedb"
 	"fmt"
+	"log"
+	"os"
 	"time"
 
 	"github.com/fatih/color"
+	"github.com/urfave/cli"
 )
 
 var red = color.New(color.FgRed).SprintFunc()
 var green = color.New(color.FgGreen).SprintFunc()
 
+func init() {
+	app := cli.NewApp()
+	app.Name = "La Lista"
+	app.Usage = "Try to search in themoviedb.org the selected files"
+	app.Action = func(c *cli.Context) error {
+		if c.NArg() > 0 {
+			ScanDir(c.Args().First())
+		}
+		ScanDir("movieFile")
+		return nil
+	}
+
+	err := app.Run(os.Args)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 func main() {
-
-	arg()
-
-	// dir := flag.String("scan", "./movieFile/", "Scan directory to search movie file")
-	// flag.Parse()
 
 }
 
