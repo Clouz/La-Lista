@@ -22,8 +22,9 @@ func init() {
 	app.Action = func(c *cli.Context) error {
 		if c.NArg() > 0 {
 			ScanDir(c.Args().First())
+		} else {
+			ScanDir("movieFile")
 		}
-		ScanDir("movieFile")
 		return nil
 	}
 
@@ -40,7 +41,7 @@ func main() {
 //ScanDir search in the selected directory using TMDB
 func ScanDir(dir string) {
 
-	m := movieFile.GetFile(dir)
+	m := movieFile.GetFiles(dir)
 
 	for _, mov := range m {
 		time.Sleep(time.Duration(200) * time.Millisecond) //TODO: try to reduce delay

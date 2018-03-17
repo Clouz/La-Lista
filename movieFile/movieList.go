@@ -32,13 +32,23 @@ type Movie struct {
 	Year int         //Movie year if exist otherwise is 0
 }
 
-//GetFile return all the movies found in the directory
-func GetFile(dir string) []Movie {
+//GetFiles return all the movies found in the directory
+func GetFiles(dir string) []Movie {
 
-	//Read all the file in the directory
-	files, err := ioutil.ReadDir(dir)
+	file, err := os.Stat(dir)
 	if err != nil {
 		log.Fatal(err)
+	}
+
+	var files []os.FileInfo
+
+	if file.IsDir() {
+		files, err = ioutil.ReadDir(dir)
+		if err != nil {
+			log.Fatal(err)
+		}
+	} else {
+		files = []os.FileInfo{file}
 	}
 
 	movies := make([]Movie, len(files))
