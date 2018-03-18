@@ -53,7 +53,7 @@ func start() {
 		if c.NArg() > 0 {
 			ScanDir(c.Args().First())
 		} else {
-			ScanDir("movieFile/Rogue One: A Star Wars Story (2016).testMovie")
+			ScanDir("movieFile/debug/Rogue One: A Star Wars Story (2016).testMovie")
 		}
 		return nil
 	}
@@ -62,6 +62,8 @@ func start() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Printf("Default: %v, Delay: %v", Default, Delay)
 }
 
 func main() {
