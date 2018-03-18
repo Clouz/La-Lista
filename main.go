@@ -24,6 +24,9 @@ var Default bool
 //Folder selected without argument
 var Folder string
 
+//Language used to search film
+var Language string
+
 func start() {
 	app := cli.NewApp()
 	app.Name = "La Lista"
@@ -44,16 +47,28 @@ func start() {
 			Destination: &Delay,
 		},
 		cli.BoolFlag{
-			Name:        "default",
+			Name:        "default, d",
 			Usage:       "Default choice for single request",
 			Destination: &Default,
+		},
+		cli.StringFlag{
+			Name:        "folder,f",
+			Usage:       "Folder selected withour argument",
+			Value:       ".",
+			Destination: &Folder,
+		},
+		cli.StringFlag{
+			Name:        "language, l",
+			Usage:       "Language used to search film",
+			Value:       "it-IT",
+			Destination: &Language,
 		},
 	}
 	app.Action = func(c *cli.Context) error {
 		if c.NArg() > 0 {
 			ScanDir(c.Args().First())
 		} else {
-			ScanDir("movieFile/debug/Rogue One: A Star Wars Story (2016).testMovie")
+			ScanDir(Folder)
 		}
 		return nil
 	}
@@ -63,11 +78,12 @@ func start() {
 		log.Fatal(err)
 	}
 
-	fmt.Printf("Default: %v, Delay: %v", Default, Delay)
 }
 
 func main() {
 	start()
+
+	movieFile.RawFilename()
 }
 
 //ScanDir search in the selected directory using TMDB
@@ -77,11 +93,11 @@ func ScanDir(dir string) {
 
 	if len(m) > 1 {
 		for _, mov := range m {
-			time.Sleep(time.Duration(Delay) * time.Millisecond) //TODO: try to reduce delay
+			time.Sleep(time.Duration(Delay) * time.Millisecond)
 			s := themoviedb.SearchMovie{
 				Query:    mov.Name,
 				Year:     mov.Year,
-				Language: "IT-it",
+				Language: Language,
 			}
 			sch, err := s.Search()
 
@@ -92,11 +108,11 @@ func ScanDir(dir string) {
 
 			fmt.Printf("[  %v  ] %v\n", green("OK"), sch.Results[0].Title)
 		}
-	} else {
+	} else if len(m) == 1 {
 		s := themoviedb.SearchMovie{
 			Query:    m[0].Name,
 			Year:     m[0].Year,
-			Language: "IT-it",
+			Language: Language,
 		}
 		sch, err := s.Search()
 
